@@ -1,0 +1,40 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\DB;
+
+class {{ class }} extends TestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+        DB::beginTransaction();
+
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_example(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
+
+    protected function tearDown(): void
+    {
+        DB::rollBack();
+        parent::tearDown();
+    }
+}
