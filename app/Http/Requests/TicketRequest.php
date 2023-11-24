@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class FlightRequest extends FormRequest
+class TicketRequest extends FormRequest
 {
     use Response;
 
@@ -28,23 +28,30 @@ class FlightRequest extends FormRequest
     {
         if ($this->method() == 'PUT') {
             return [
-                'departure_date' => 'required',
-                'flight_origin_id' => 'required|exists:airports,id|different:flight_destination_id',
-                'flight_destination_id' => 'required|exists:airports,id|different:flight_origin_id',
+                //
             ];
         }
 
-        return [
-            'departure_date' => 'required',
-            'flight_origin_id' => 'required|exists:airports,id|different:flight_destination_id',
-            'flight_destination_id' => 'required|exists:airports,id|different:flight_origin_id',
-            'flight_class' => 'array|required',
-            'flight_class.*.seats_qty' => 'required|numeric',
-            'flight_class.*.flight_class_type_id' => 'required|numeric|exists:flight_class_types,id',
-            'flight_class.*.price' => 'required|numeric',
+        $rule = [
+            'purchaser.name' => 'required',
+            'purchaser.email' => 'required|email',
+            'purchaser.cpf' => 'required|cpf',
+            'purchaser.birth_date' => 'required',
+            'seat_id' => 'required|exists:seats,id',
+            'qty_tickets' => 'required',
+            'has_baggage_exceeded' => 'required|boolean'
         ];
-    }
 
+        if ($this->qty_tickets > 1) {
+            $rule['passengers.*.name'] = 'required';
+            $rule['passengers.*.email'] = 'required|email';
+            $rule['passengers.*.cpf'] = 'required|cpf';
+            $rule['passengers.*.birth_date'] = 'required';
+            $rule['passengers.*.seat_id'] = 'required|exists:seats,id';
+            $rule['passengers.*.has_baggage_exceeded'] = 'required|boolean';
+        }
+        return $rule;
+    }
 
     protected function failedValidation(Validator $validator)
     {

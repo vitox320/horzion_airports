@@ -16,7 +16,9 @@ return new class extends Migration {
             $table->decimal('price');
             $table->foreignId('seat_id')->constrained('seats');
             $table->foreignId('passenger_id')->constrained('passengers');
+            $table->foreignId('purchaser_id')->constrained('passengers');
             $table->boolean('has_baggage_exceeded');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

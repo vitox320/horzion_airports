@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class FlightRequest extends FormRequest
+class SeatRequest extends FormRequest
 {
     use Response;
 
@@ -28,23 +28,15 @@ class FlightRequest extends FormRequest
     {
         if ($this->method() == 'PUT') {
             return [
-                'departure_date' => 'required',
-                'flight_origin_id' => 'required|exists:airports,id|different:flight_destination_id',
-                'flight_destination_id' => 'required|exists:airports,id|different:flight_origin_id',
+                'price' => 'required'
             ];
         }
-
         return [
-            'departure_date' => 'required',
-            'flight_origin_id' => 'required|exists:airports,id|different:flight_destination_id',
-            'flight_destination_id' => 'required|exists:airports,id|different:flight_origin_id',
-            'flight_class' => 'array|required',
-            'flight_class.*.seats_qty' => 'required|numeric',
-            'flight_class.*.flight_class_type_id' => 'required|numeric|exists:flight_class_types,id',
-            'flight_class.*.price' => 'required|numeric',
+            'flight_id' => 'required|exists:flights,id',
+            'flight_class_type_id' => 'required|exists:flight_class_types,id',
+            'price' => 'required|numeric'
         ];
     }
-
 
     protected function failedValidation(Validator $validator)
     {

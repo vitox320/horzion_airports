@@ -17,7 +17,8 @@ class SeatFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'seat_number' => $this->faker->randomNumber(5),
+            'price' => $this->faker->randomNumber(2)
         ];
     }
 }
