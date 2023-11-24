@@ -4,6 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Airport;
 use App\Models\City;
+use App\Models\Flight;
+use App\Models\FlightClass;
+use App\Models\FlightClassType;
+use App\Models\Seat;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -105,6 +109,22 @@ class FlightTest extends TestCase
         $response->assertStatus(500);
     }
 
+    public function testIfFlightCanBeListed()
+    {
+        Flight::factory()
+            ->for(Airport::factory()->create(), 'flightOriginAirport')
+            ->for(Airport::factory()->create(), 'flightDestinationAirport')
+            ->has(FlightClass::factory()
+                ->for(FlightClassType::factory()->create(['name' => 'economico']))
+                ->has(Seat::factory()->count(5))
+                ->count(1))
+            ->count(10)->create();
+
+        $response = $this->get('/api/flight/');
+        $response->assertOk();
+        //$responseData = json_decode($response->content(), true);
+    }
+
     public function testIfFlightCanBeCreated()
     {
         $airPorts = Airport::factory()->count(2)->create()->toArray();
@@ -125,6 +145,39 @@ class FlightTest extends TestCase
         $response = $this->post('/api/flight/', $requestData);
         $response->assertSee('Registro inserido com sucesso');
         $response->assertStatus(201);
+    }
+
+    public function testIfFlightCanBeUpdated()
+    {
+
+        $flight = Flight::factory()
+            ->for(Airport::factory()->create(), 'flightOriginAirport')
+            ->for(Airport::factory()->create(), 'flightDestinationAirport')
+            ->create();
+
+        $airports = Airport::factory()->count(2)->create();
+        $requestData = [
+            'departure_date' => '25/12/2023 22:30',
+            'flight_origin_id' => $airports[0]['id'],
+            'flight_destination_id' => $airports[1]['id'],
+        ];
+
+        $response = $this->put("/api/flight/$flight->id", $requestData);
+        $response->assertSee('Registro atualizado com sucesso');
+        $response->assertOk();
+    }
+
+    public function testIfFlightCanBeDeleted()
+    {
+        $flight = Flight::factory()
+            ->for(Airport::factory()->create(), 'flightOriginAirport')
+            ->for(Airport::factory()->create(), 'flightDestinationAirport')
+            ->create();
+
+        $response = $this->delete("/api/flight/$flight->id");
+        $response->assertOk();
+        $response->assertSee('Registro desativado com sucesso');
+        $this->assertSoftDeleted(Flight::class, ['id' => $flight->id]);
     }
 
     protected function tearDown(): void

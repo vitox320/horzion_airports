@@ -17,7 +17,7 @@ class FlightClassFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'seats_qty' => 5
         ];
     }
 }

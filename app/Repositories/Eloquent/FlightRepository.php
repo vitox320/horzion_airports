@@ -4,17 +4,23 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Flight;
 use App\Repositories\Interface\FlightRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class FlightRepository implements FlightRepositoryInterface
 {
 
-    public function __construct(private Flight $entity)
+    public function __construct(private readonly Flight $entity)
     {
     }
 
-    public function getAll(): \Illuminate\Database\Eloquent\Collection|array
+    public function getAll(): LengthAwarePaginator
     {
-        return $this->entity::query()->get();
+        return $this->entity::with([
+            'flightOriginAirport',
+            'flightDestinationAirport',
+            'flightClass'
+        ])->paginate(50);
     }
 
 

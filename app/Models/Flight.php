@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Flight extends Model
@@ -34,8 +36,13 @@ class Flight extends Model
         return $this->belongsTo(Airport::class, 'flight_destination_id');
     }
 
-    public function flightClass(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function flightClass(): HasMany
     {
         return $this->hasMany(FlightClass::class);
+    }
+
+    public function seats(): HasManyThrough
+    {
+        return $this->hasManyThrough(Seat::class, FlightClass::class);
     }
 }

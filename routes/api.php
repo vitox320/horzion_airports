@@ -3,6 +3,8 @@
 use App\Http\Controllers\AirportController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\SeatController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login/', [UserController::class, 'login']);
 
+Route::prefix('/tickets')->group(function () {
+    Route::post('/', [TicketController::class, 'store']);
+    Route::delete('/{id}', [TicketController::class, 'delete']);
+});
+
 Route::middleware(['auth:sanctum', 'abilities:manager_ability'])->group(function () {
 
     Route::prefix('/city')->group(function () {
@@ -30,7 +37,15 @@ Route::middleware(['auth:sanctum', 'abilities:manager_ability'])->group(function
         Route::get('/', [AirportController::class, 'getAll']);
     });
 
+    Route::prefix('/seats')->group(function () {
+        Route::post('/', [SeatController::class, 'store']);
+        Route::put('/{id}', [SeatController::class, 'update']);
+    });
+
     Route::prefix('flight')->group(function () {
+        Route::get('/', [FlightController::class, 'getAll']);
         Route::post('/', [FlightController::class, 'store']);
+        Route::put('/{id}', [FlightController::class, 'update']);
+        Route::delete('/{id}', [FlightController::class, 'delete']);
     });
 });
