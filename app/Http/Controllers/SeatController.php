@@ -16,6 +16,11 @@ class SeatController extends Controller
     {
     }
 
+    public function getAll(Request $request)
+    {
+        return $this->apiResponse(['data' => $this->service->getAll($request->all())]);
+    }
+
     public function store(SeatRequest $request): JsonResponse
     {
         $this->service->store($request->all());

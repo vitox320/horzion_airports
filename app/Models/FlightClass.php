@@ -25,7 +25,7 @@ class FlightClass extends Model
 
     public function flight(): BelongsTo
     {
-        return $this->belongsTo(Flight::class, 'flight_id');
+        return $this->belongsTo(Flight::class, 'flight_id', 'id');
     }
 
     public function seats(): HasMany

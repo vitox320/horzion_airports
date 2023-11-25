@@ -109,6 +109,23 @@ class FlightTest extends TestCase
         $response->assertStatus(500);
     }
 
+
+    public function testIfSeatsTicketsCanBeListed()
+    {
+        Flight::factory()
+            ->for(Airport::factory()->create(), 'flightOriginAirport')
+            ->for(Airport::factory()->create(), 'flightDestinationAirport')
+            ->has(FlightClass::factory()
+                ->for(FlightClassType::factory()->create(['name' => 'economico']))
+                ->has(Seat::factory()->count(10))
+                ->count(1))
+            ->create();
+
+        $response = $this->get("/api/flight/seats/");
+        $responseData = json_decode($response->content(), true);
+        $response->assertOk();
+    }
+
     public function testIfFlightCanBeListed()
     {
         Flight::factory()

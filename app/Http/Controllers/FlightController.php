@@ -16,6 +16,8 @@ class FlightController extends Controller
     {
     }
 
+
+
     public function getAll(): JsonResponse
     {
         return $this->apiResponse(['data' => $this->service->getAll()]);

@@ -6,7 +6,7 @@ use App\Models\Seat;
 
 interface SeatRepositoryInterface
 {
-    public function getAll();
+    public function getAll(array $data);
 
     public function store(array $data);
 

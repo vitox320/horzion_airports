@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\NumberGenerator;
+use App\Http\Resources\SeatCollection;
 use App\Models\FlightClass;
 use App\Repositories\Interface\FlightRepositoryInterface;
 use App\Repositories\Interface\SeatRepositoryInterface;
@@ -13,6 +14,11 @@ class SeatService
 {
     public function __construct(private readonly SeatRepositoryInterface $repository, private readonly FlightRepositoryInterface $flightRepository)
     {
+    }
+
+    public function getAll(array $data)
+    {
+        return new SeatCollection($this->repository->getAll($data));
     }
 
     public function store(array $data)

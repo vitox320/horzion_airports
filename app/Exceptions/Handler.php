@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Traits\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,7 +25,10 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof \DomainException) {
-            return $this->apiResponse(['error' => 'Erro no servidor', 'message' => $e->getMessage()], 500);
+            return $this->apiResponse(['error' => 'Erro interno', 'message' => $e->getMessage()], 500);
+        }
+        if ($e instanceof RouteNotFoundException) {
+            return $this->apiResponse(['error' => 'Erro interno', 'message' => $e->getMessage()], 500);
         }
 
         return $this->apiResponse(['error' => 'Erro interno'], 500);

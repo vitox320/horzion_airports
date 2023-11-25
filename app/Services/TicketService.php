@@ -30,12 +30,22 @@ class TicketService
             $data['purchaser_id'] = $purchaser->id;
             $data['ticket_number'] = NumberGenerator::generatorRandomDigit();
             $data['price'] = $this->createPrice($data['seat_id'], $data['has_baggage_exceeded']);
+            $this->verifyIfSeatHasBeenSold($data['seat_id']);
             $this->repository->store($data);
             if (isset($data['passengers'])) {
                 $this->saveManyTickets($data['passengers'], $data['purchaser_id']);
             }
         });
 
+    }
+
+    public function verifyIfSeatHasBeenSold(int $seat_id): void
+    {
+        $seat = $this->seatRepository->findById($seat_id);
+
+        if (!is_null($seat->ticket()->first())) {
+            throw new \DomainException('Passagem não está disponível para compra');
+        }
     }
 
     public function createPrice(int $seat_id, bool $baggage_exceeded)
@@ -58,6 +68,7 @@ class TicketService
             $ticket['purchaser_id'] = $purchaser_id;
             $ticket['ticket_number'] = NumberGenerator::generatorRandomDigit();
             $ticket['seat_id'] = $passenger['seat_id'];
+            $this->verifyIfSeatHasBeenSold($passenger['seat_id']);
             $ticket['price'] = $this->createPrice($passenger['seat_id'], $passenger['has_baggage_exceeded']);
             $ticket['has_baggage_exceeded'] = $passenger['has_baggage_exceeded'];
             $this->repository->store($ticket);

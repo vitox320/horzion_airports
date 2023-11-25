@@ -17,7 +17,9 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'ticket_number' => $this->faker->randomNumber(5),
+            'price' => $this->faker->randomNumber(3),
+            'has_baggage_exceeded' => $this->faker->boolean
         ];
     }
 }

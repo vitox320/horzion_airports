@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AirportController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\FlightClassTypeController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\TicketController;
@@ -27,6 +28,12 @@ Route::prefix('/tickets')->group(function () {
     Route::delete('/{id}', [TicketController::class, 'delete']);
 });
 
+Route::get('/flight/seats/', [SeatController::class, 'getAll']);
+
+Route::prefix('flight-class-type')->group(function () {
+    Route::get('/', [FlightClassTypeController::class, 'getAll']);
+});
+
 Route::middleware(['auth:sanctum', 'abilities:manager_ability'])->group(function () {
 
     Route::prefix('/city')->group(function () {
@@ -36,6 +43,8 @@ Route::middleware(['auth:sanctum', 'abilities:manager_ability'])->group(function
     Route::prefix('/airport')->group(function () {
         Route::get('/', [AirportController::class, 'getAll']);
     });
+
+
 
     Route::prefix('/seats')->group(function () {
         Route::post('/', [SeatController::class, 'store']);

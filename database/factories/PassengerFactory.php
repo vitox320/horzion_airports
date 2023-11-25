@@ -12,12 +12,21 @@ class PassengerFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return \Faker\Generator
      */
+
+    protected function withFaker()
+    {
+        return \Faker\Factory::create('pt_BR');
+    }
+
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'cpf' => $this->faker->unique()->cpf,
+            'email' => $this->faker->unique()->safeEmail(),
+            'birth_date' => $this->faker->date()
         ];
     }
 }
