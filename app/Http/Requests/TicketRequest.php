@@ -35,7 +35,7 @@ class TicketRequest extends FormRequest
         $rule = [
             'purchaser.name' => 'required',
             'purchaser.email' => 'required|email',
-            'purchaser.cpf' => 'required|cpf',
+            'purchaser.cpf' => 'required|cpf|unique:passengers,cpf',
             'purchaser.birth_date' => 'required',
             'seat_id' => 'required|exists:seats,id',
             'qty_tickets' => 'required',
@@ -45,7 +45,7 @@ class TicketRequest extends FormRequest
         if ($this->qty_tickets > 1) {
             $rule['passengers.*.name'] = 'required';
             $rule['passengers.*.email'] = 'required|email';
-            $rule['passengers.*.cpf'] = 'required|cpf';
+            $rule['passengers.*.cpf'] = 'required|cpf|unique:passengers,cpf';
             $rule['passengers.*.birth_date'] = 'required';
             $rule['passengers.*.seat_id'] = 'required|exists:seats,id';
             $rule['passengers.*.has_baggage_exceeded'] = 'required|boolean';

@@ -17,6 +17,10 @@ class FlightController extends Controller
     }
 
 
+    public function getPassengersByFlight(int $id)
+    {
+        return $this->service->getPassengersByFlight($id);
+    }
 
     public function getAll(): JsonResponse
     {

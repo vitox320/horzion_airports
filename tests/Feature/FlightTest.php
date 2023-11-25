@@ -7,7 +7,9 @@ use App\Models\City;
 use App\Models\Flight;
 use App\Models\FlightClass;
 use App\Models\FlightClassType;
+use App\Models\Passenger;
 use App\Models\Seat;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -109,6 +111,27 @@ class FlightTest extends TestCase
         $response->assertStatus(500);
     }
 
+
+    public function testIfPassengersTicketCanBeListed()
+    {
+        $ticket = Ticket::factory()->for(Seat::factory()
+            ->for(FlightClass::factory()
+                ->for(FlightClassType::factory()->create(['name' => 'Primeira classe']))
+                ->for(Flight::factory()
+                    ->for(Airport::factory()->create(), 'flightOriginAirport')
+                    ->for(Airport::factory()->create(), 'flightDestinationAirport')
+                    ->create()))
+            ->create()
+        )
+            ->for(Passenger::factory()->create(), 'passenger')
+            ->for(Passenger::factory()->create(), 'purchaser')
+            ->count(10)
+            ->create();
+
+        $response = $this->get("api/passengers/1");
+        $response->assertOk();
+
+    }
 
     public function testIfSeatsTicketsCanBeListed()
     {

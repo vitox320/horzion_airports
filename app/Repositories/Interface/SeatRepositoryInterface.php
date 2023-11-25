@@ -6,6 +6,8 @@ use App\Models\Seat;
 
 interface SeatRepositoryInterface
 {
+    public function getPassengersByFlight(int $id);
+
     public function getAll(array $data);
 
     public function store(array $data);

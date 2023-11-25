@@ -11,6 +11,10 @@ class PassengerRepository implements PassengerRepositoryInterface
     {
     }
 
+    public function getAll(array $data)
+    {
+        $query = $this->entity::with(['']);
+    }
     public function store(array $data)
     {
         return $this->entity::create($data);

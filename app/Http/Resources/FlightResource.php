@@ -16,9 +16,10 @@ class FlightResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'Número de voo' => $this->flight_number,
-            'aeroporto_origem' => $this->flightOriginAirport?->name,
-            'aeroporto_destino' => $this->flightDestinationAirport?->name,
+            'departure_date' => $this->departure_date->format('d/m/Y H:i'),
+            'flight_number' => $this->flight_number,
+            'flight_origin_airport' => $this->flightOriginAirport?->name,
+            'flight_destination_airport' => $this->flightDestinationAirport?->name,
             'classes' => FlightClassResource::collection($this->flightClass)
         ];
     }
