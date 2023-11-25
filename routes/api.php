@@ -26,6 +26,8 @@ Route::post('/auth/login/', [UserController::class, 'login']);
 Route::prefix('/tickets')->group(function () {
     Route::post('/', [TicketController::class, 'store']);
     Route::get('/get-by-cpf', [TicketController::class, 'getTicketsByCpfPurchaser']);
+    Route::get('/voucher', [TicketController::class, 'generateVoucher']);
+    Route::get('/baggage-ticket', [TicketController::class, 'generateBaggageTicket']);
     Route::delete('/{id}', [TicketController::class, 'delete']);
 });
 

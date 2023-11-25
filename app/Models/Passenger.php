@@ -18,8 +18,8 @@ class Passenger extends Model
         'birth_date'
     ];
 
-    public function baggages(): HasMany
+    public function baggages()
     {
-        return $this->hasMany(Baggage::class);
+        return $this->hasOne(Baggage::class)->latest();
     }
 }

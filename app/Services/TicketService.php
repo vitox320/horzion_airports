@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Helpers\NumberGenerator;
+use App\Http\Resources\BaggageTicketPassengerResource;
 use App\Http\Resources\TicketCollection;
+use App\Http\Resources\TicketResource;
+use App\Models\Passenger;
 use App\Repositories\Interface\PassengerRepositoryInterface;
 use App\Repositories\Interface\SeatRepositoryInterface;
 use App\Repositories\Interface\TicketRepositoryInterface;
@@ -21,6 +24,16 @@ class TicketService
     {
     }
 
+    public function generateBaggageTicket(array $data): BaggageTicketPassengerResource
+    {
+        return new BaggageTicketPassengerResource($this->repository->getTicketByCpfPassenger(new Cpf($data['cpf'])));
+    }
+
+    public function generateVoucher(array $data)
+    {
+        return new TicketResource($this->repository->getTicketByCpfPassenger(new Cpf($data['cpf'])));
+    }
+
     public function getTicketsByCpfPurchaser(array $data): TicketCollection
     {
         return new TicketCollection($this->repository->getTicketsByCpfPurchaser(new Cpf($data['cpf'])));
@@ -36,6 +49,9 @@ class TicketService
             $data['purchaser_id'] = $purchaser->id;
             $data['ticket_number'] = NumberGenerator::generatorRandomDigit();
             $data['price'] = $this->createPrice($data['seat_id'], $data['has_baggage_exceeded']);
+            if ($data['has_baggage_exceeded']) {
+                $this->createBaggage($purchaser);
+            }
             $this->verifyIfSeatHasBeenSold($data['seat_id']);
             $this->repository->store($data);
             if (isset($data['passengers'])) {
@@ -43,6 +59,13 @@ class TicketService
             }
         });
 
+    }
+
+    public function createBaggage(Passenger $passenger): void
+    {
+        $passenger->baggages()->create([
+            'baggage_number' => NumberGenerator::generatorRandomDigit()
+        ]);
     }
 
     public function verifyIfSeatHasBeenSold(int $seat_id): void
@@ -69,6 +92,9 @@ class TicketService
             $passenger['cpf'] = (string)new Cpf($passenger['cpf']);
             $passenger['email'] = (string)new Email($passenger['email']);
             $passengerCreated = $this->passengerRepository->store($passenger);
+            if ($passenger['has_baggage_exceeded']) {
+                $this->createBaggage($passengerCreated);
+            }
             $ticket = [];
             $ticket['passenger_id'] = $passengerCreated->id;
             $ticket['purchaser_id'] = $purchaser_id;

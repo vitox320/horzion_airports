@@ -150,6 +150,36 @@ class TicketTest extends TestCase
         $response->assertStatus(201);
     }
 
+    public function testIfVoucherCanBeGenerated()
+    {
+        $seat = Seat::factory()
+            ->for(FlightClass::factory()
+                ->for(FlightClassType::factory()->create(['name' => 'Primeira classe']))
+                ->for(Flight::factory()
+                    ->for(Airport::factory()->create(), 'flightOriginAirport')
+                    ->for(Airport::factory()->create(), 'flightDestinationAirport')
+                    ->create()))
+            ->create();
+
+        $requestData = [
+            'purchaser' => [
+                'name' => 'Victor Teste',
+                'email' => 'teste@gmail.com',
+                'cpf' => '672.382.690-66',
+                'birth_date' => '25/06/1994',
+            ],
+            'qty_tickets' => 1,
+            'seat_id' => $seat->id,
+            'has_baggage_exceeded' => false,
+        ];
+
+        $this->post('/api/tickets', $requestData);
+
+        $response = $this->get("api/tickets/voucher?cpf={$requestData['purchaser']['cpf']}");
+        $teste = json_decode($response->content(), true);
+        $response->assertOk();
+
+    }
 
     public function testIfTicketCanBeDeleted()
     {
