@@ -6,7 +6,9 @@ use App\Models\Airport;
 use App\Models\Flight;
 use App\Models\FlightClass;
 use App\Models\FlightClassType;
+use App\Models\Passenger;
 use App\Models\Seat;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -100,6 +102,29 @@ class TicketTest extends TestCase
         $response = $this->post('/api/tickets', $requestData);
         $response->assertSee('Registro inserido com sucesso');
         $response->assertStatus(201);
+    }
+
+
+    public function testIfTicketCanBeDeleted()
+    {
+        $ticket = Ticket::factory()->for(Seat::factory()
+            ->for(FlightClass::factory()
+                ->for(FlightClassType::factory()->create(['name' => 'Primeira classe']))
+                ->for(Flight::factory()
+                    ->for(Airport::factory()->create(), 'flightOriginAirport')
+                    ->for(Airport::factory()->create(), 'flightDestinationAirport')
+                    ->create()))
+            ->create()
+        )
+            ->for(Passenger::factory()->create(), 'passenger')
+            ->for(Passenger::factory()->create(), 'purchaser')
+            ->create();
+
+
+        $response = $this->delete("api/tickets/$ticket->id");
+        $response->assertSee('Registro deletado com sucesso');
+        $response->assertOk();
+        $this->assertSoftDeleted(Ticket::class, ['id' => $ticket->id]);
     }
 
     protected function tearDown(): void

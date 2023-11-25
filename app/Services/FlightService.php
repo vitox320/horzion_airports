@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\NumberGenerator;
 use App\Http\Resources\FlightCollection;
+use App\Http\Resources\SeatCollection;
 use App\Repositories\Interface\AirportRepositoryInterface;
 use App\Repositories\Interface\FlightClassRepositoryInterface;
 use App\Repositories\Interface\FlightRepositoryInterface;
@@ -43,7 +44,8 @@ class FlightService
         $data['departure_date'] = $this->getDateTimeFormat($data['departure_date']);
         $this->verifyIfAirportBelongsToTheSameCity($data['flight_origin_id'], $data['flight_destination_id']);
         $flight = $this->repository->findById($id);
-        $this->repository->update($flight, $data);
+        $flight->fill($data);
+        $flight->update($data);
     }
 
     public function delete(int $id): void

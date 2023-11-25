@@ -19,6 +19,11 @@ class Seat extends Model
 
     public function flightClass(): BelongsTo
     {
-        return $this->belongsTo(FlightClass::class,'flight_class_id');
+        return $this->belongsTo(FlightClass::class, 'flight_class_id');
+    }
+
+    public function ticket()
+    {
+        return $this->hasOne(Ticket::class);
     }
 }
