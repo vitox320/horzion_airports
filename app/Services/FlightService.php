@@ -2,21 +2,35 @@
 
 namespace App\Services;
 
+use App\Helpers\DateGenerator;
 use App\Helpers\NumberGenerator;
 use App\Http\Resources\FlightCollection;
 use App\Http\Resources\SeatCollection;
+use App\Http\Resources\SeatTicketPassengerCollection;
+use App\Models\Seat;
 use App\Repositories\Interface\AirportRepositoryInterface;
 use App\Repositories\Interface\FlightClassRepositoryInterface;
 use App\Repositories\Interface\FlightRepositoryInterface;
+use App\Repositories\Interface\SeatRepositoryInterface;
 
 class FlightService
 {
+
+
     public function __construct(
         private readonly FlightRepositoryInterface      $repository,
         private readonly AirportRepositoryInterface     $airportRepository,
-        private readonly FlightClassRepositoryInterface $flightClassRepository
+        private readonly FlightClassRepositoryInterface $flightClassRepository,
+        private readonly SeatRepositoryInterface        $seatRepository,
+        private readonly DateGenerator                  $dateGenerator
     )
     {
+
+    }
+
+    public function getPassengersByFlight(int $id): SeatTicketPassengerCollection
+    {
+        return new SeatTicketPassengerCollection($this->seatRepository->getPassengersByFlight($id));
     }
 
     public function getAll()
@@ -75,10 +89,6 @@ class FlightService
      */
     public function getDateTimeFormat($departure_date): string
     {
-        $dateTimeFormat = \DateTime::createFromFormat('d/m/Y H:i', $departure_date);
-        if (!$dateTimeFormat) {
-            throw new \DomainException('O formato de data inserido é inválido');
-        }
-        return $dateTimeFormat->format('Y-m-d H:i:s');
+        return $this->dateGenerator->getDateTimeFormat($departure_date);
     }
 }

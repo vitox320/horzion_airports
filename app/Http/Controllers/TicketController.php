@@ -15,13 +15,22 @@ class TicketController extends Controller
     {
     }
 
-    public function store(TicketRequest $request)
+    public function getTicketsByCpfPurchaser(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'cpf' => 'required|cpf'
+        ]);
+
+        return $this->apiResponse(['data' => $this->service->getTicketsByCpfPurchaser($request->all())]);
+    }
+
+    public function store(TicketRequest $request): \Illuminate\Http\JsonResponse
     {
         $this->service->store($request->all());
         return $this->apiResponse(['message' => 'Registro inserido com sucesso'], 201);
     }
 
-    public function delete(int $id)
+    public function delete(int $id): \Illuminate\Http\JsonResponse
     {
         $this->service->delete($id);
         return $this->apiResponse(['message' => 'Registro deletado com sucesso']);

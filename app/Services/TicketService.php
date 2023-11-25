@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\NumberGenerator;
+use App\Http\Resources\TicketCollection;
 use App\Repositories\Interface\PassengerRepositoryInterface;
 use App\Repositories\Interface\SeatRepositoryInterface;
 use App\Repositories\Interface\TicketRepositoryInterface;
@@ -18,6 +19,11 @@ class TicketService
         private readonly SeatRepositoryInterface      $seatRepository
     )
     {
+    }
+
+    public function getTicketsByCpfPurchaser(array $data): TicketCollection
+    {
+        return new TicketCollection($this->repository->getTicketsByCpfPurchaser(new Cpf($data['cpf'])));
     }
 
     public function store(array $data): void

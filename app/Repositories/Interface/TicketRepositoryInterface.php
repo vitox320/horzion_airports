@@ -3,9 +3,11 @@
 namespace App\Repositories\Interface;
 
 use App\Models\Ticket;
+use App\ValueObjects\Cpf;
 
 interface TicketRepositoryInterface
 {
+    public function getTicketsByCpfPurchaser(Cpf $cpf);
     public function store(array $data);
 
     public function findById(int $id);

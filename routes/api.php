@@ -25,6 +25,7 @@ Route::post('/auth/login/', [UserController::class, 'login']);
 
 Route::prefix('/tickets')->group(function () {
     Route::post('/', [TicketController::class, 'store']);
+    Route::get('/get-by-cpf', [TicketController::class, 'getTicketsByCpfPurchaser']);
     Route::delete('/{id}', [TicketController::class, 'delete']);
 });
 
@@ -44,8 +45,6 @@ Route::middleware(['auth:sanctum', 'abilities:manager_ability'])->group(function
         Route::get('/', [AirportController::class, 'getAll']);
     });
 
-
-
     Route::prefix('/seats')->group(function () {
         Route::post('/', [SeatController::class, 'store']);
         Route::put('/{id}', [SeatController::class, 'update']);
@@ -53,6 +52,7 @@ Route::middleware(['auth:sanctum', 'abilities:manager_ability'])->group(function
 
     Route::prefix('flight')->group(function () {
         Route::get('/', [FlightController::class, 'getAll']);
+        Route::get('/passengers/{id}', [FlightController::class, 'getPassengersByFlight']);
         Route::post('/', [FlightController::class, 'store']);
         Route::put('/{id}', [FlightController::class, 'update']);
         Route::delete('/{id}', [FlightController::class, 'delete']);

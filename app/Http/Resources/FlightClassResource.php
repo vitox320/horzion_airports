@@ -16,9 +16,9 @@ class FlightClassResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'quantidade_assentos' => $this->seats_qty,
-            'tipo_classe' => $this->flightClassType?->name,
-            'assentos' => SeatResource::collection($this->seats)
+            'seats_qty' => $this->seats_qty,
+            'flight_class_type' => $this->flightClassType?->name,
+            'seats' => SeatResource::collection($this->seats)
         ];
     }
 }

@@ -16,15 +16,15 @@ class SeatResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'Número do assento' => $this->seat_number,
-            'Preço' => $this->price,
-            'Classe Do Voo' => $this->flightClass?->flightClassType?->name,
-            'Número do voo' => $this->flightClass?->flight?->flight_number,
-            'Data de partida' => $this->flightClass?->flight?->departure_date->format('d/m/Y H:i:s'),
-            'Origem' => $this->flightClass?->flight?->flightOriginAirport?->name,
-            'Cidade Origem' => $this->flightClass?->flight?->flightOriginAirport?->city->name,
-            'Destino' => $this->flightClass?->flight?->flightDestinationAirport?->name,
-            'Cidade Destino' => $this->flightClass?->flight?->flightDestinationAirport?->city->name,
+            'seat_number' => $this->seat_number,
+            'price' => $this->price,
+            'flight_class_type' => $this->flightClass?->flightClassType?->name,
+            'flight_number' => $this->flightClass?->flight?->flight_number,
+            'departure_date' => $this->flightClass?->flight?->departure_date->format('d/m/Y H:i:s'),
+            'flight_origin_airport' => $this->flightClass?->flight?->flightOriginAirport?->name,
+            'flight_origin_airport_city' => $this->flightClass?->flight?->flightOriginAirport?->city->name,
+            'flight_destination_airport' => $this->flightClass?->flight?->flightDestinationAirport?->name,
+            'flight_destination_airport_city' => $this->flightClass?->flight?->flightDestinationAirport?->city->name,
         ];
     }
 }
