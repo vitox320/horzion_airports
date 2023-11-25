@@ -128,7 +128,7 @@ class FlightTest extends TestCase
             ->count(10)
             ->create();
 
-        $response = $this->get("api/passengers/1");
+        $response = $this->get("api/flight/passengers/1");
         $response->assertOk();
 
     }
