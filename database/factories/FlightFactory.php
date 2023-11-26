@@ -18,7 +18,7 @@ class FlightFactory extends Factory
     {
         return [
             'flight_number' => $this->faker->unique()->randomNumber(4),
-            'departure_date' => $this->faker->dateTimeBetween('now','+3 week'),
+            'departure_date' => $this->faker->dateTimeBetween('+2 week', '+3 week'),
         ];
     }
 }
