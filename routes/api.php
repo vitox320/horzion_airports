@@ -28,7 +28,7 @@ Route::prefix('/tickets')->group(function () {
     Route::get('/get-by-cpf', [TicketController::class, 'getTicketsByCpfPurchaser']);
     Route::get('/voucher', [TicketController::class, 'generateVoucher']);
     Route::get('/baggage-ticket', [TicketController::class, 'generateBaggageTicket']);
-    Route::delete('/tickets/{id}', [TicketController::class, 'delete']);
+    Route::delete('/{id}', [TicketController::class, 'delete']);
 });
 
 Route::get('/flight/seats/', [SeatController::class, 'getAll']);
