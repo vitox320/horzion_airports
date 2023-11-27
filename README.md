@@ -33,5 +33,6 @@
      - Fluxo/CRUD de Passagens
 
 ## Documentação
+- URL de Produção: http://3.142.197.232/api/
 - Documentação:https://documenter.getpostman.com/view/22314878/2s9YeD9tKM
  
